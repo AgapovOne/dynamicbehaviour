@@ -18,6 +18,24 @@ class ViewController: UIViewController {
         newPin(color: .blue)
     ]
 
+    lazy var dynamicBehavior: UIDynamicItemBehavior = {
+        let behavior = UIDynamicItemBehavior(items: views)
+        views.forEach {
+            behavior.addLinearVelocity(
+                .init(
+                    x: CGFloat.greatestFiniteMagnitude,
+                    y: CGFloat.greatestFiniteMagnitude
+                ),
+                for: $0
+            )
+        }
+        behavior.allowsRotation = false
+        behavior.elasticity = 0
+        behavior.resistance = .greatestFiniteMagnitude
+        behavior.density = 1
+        return behavior
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap)))
@@ -53,6 +71,7 @@ class ViewController: UIViewController {
         }
 
         animator.addBehavior(collision)
+        animator.addBehavior(dynamicBehavior)
 
 //        radialTouchGravityBehaviour.minimumRadius = 100
 //        radialTouchGravityBehaviour.falloff = 3
